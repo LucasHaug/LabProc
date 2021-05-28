@@ -2,7 +2,7 @@
 @ Para rodar, fazer o seguinte:
 @ gcc item-3.10.7.s
 @ gdb a.out
-@ b 40
+@ b 38
 @ r
 @ q
 
@@ -16,13 +16,11 @@ main:
 
 	MOV r4, r2
 
-	@ Loop para alinhar o divisor com o dividendo
-	B allign_condition
-allign_loop:
-	MOV r2, r2, LSL #1
-allign_condition:
-	CMP r1, r2
-	BGT allign_loop
+	@ Alinhamento do divisor com o dividendo
+	CLZ r12, r1
+	CLZ r13, r2
+	SUBS r12, r13, r12
+	MOVPL r2, r2, LSL r12 @ Dá o shift se a subtração resultou num valor positivo
 
 	@ Loop que realiza a divisao desejada
 	B div_condition

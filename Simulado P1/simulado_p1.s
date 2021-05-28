@@ -4,7 +4,7 @@
 @ gcc simulado_p1.s
 @ gdb a.out
 @ x/3d results
-@ b 68
+@ b 66
 @ r
 @ x/3d results
 @ q
@@ -12,7 +12,7 @@
 	.text
 	.globl main
 main:
-    LDR r6, =349 @ Número para verificar os divisores
+    LDR r6, =50 @ Número para verificar os divisores
     ADR r7, results @ Ponteiro para o vetor de resultdos
 
     MOV r10, #0 @ Número de divisores encontrados
@@ -33,13 +33,11 @@ divisors_loop:
 
 	MOV r4, r2
 
-	@ Loop para alinhar o divisor com o dividendo
-	B allign_condition
-allign_loop:
-	MOV r2, r2, LSL #1
-allign_condition:
-	CMP r1, r2
-	BGT allign_loop
+	@ Alinhamento do divisor com o dividendo
+	CLZ r12, r1
+	CLZ r13, r2
+	SUBS r12, r13, r12
+	MOVPL r2, r2, LSL r12 @ Dá o shift se a subtração resultou num valor positivo
 
 	@ Loop que realiza a divisao desejada
 	B div_condition

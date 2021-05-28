@@ -4,7 +4,7 @@
 @ gcc p1.s
 @ gdb a.out
 @ x/3d primos_anteriores
-@ b 86
+@ b 85
 @ r
 @ x/3d primos_anteriores
 @ q
@@ -26,7 +26,7 @@ list_of_primes_loop:
 
 	@ ==== Início do loop de verificar se um número é primo ====
 
-    MOV r9, r6, LSR #1 @ r8 é o maior divisor possível de r6, tirando r6, que é a metade de r6
+    MOV r9, r6, LSR #1 @ r9 é o maior divisor possível de r6, tirando r6, que é a metade de r6
 	MOV r8, #2
 	MOV r10, #-1 @ Guarda o menor divisor de r6 ou -1 se for primo
 is_prime_loop:
@@ -44,13 +44,11 @@ is_prime_loop:
 
 	MOV r4, r2
 
-	@ Loop para alinhar o divisor com o dividendo
-	B allign_condition
-allign_loop:
-	MOV r2, r2, LSL #1
-allign_condition:
-	CMP r1, r2
-	BGT allign_loop
+	@ Alinhamento do divisor com o dividendo
+	CLZ r12, r1
+	CLZ r13, r2
+	SUBS r12, r13, r12
+	MOVPL r2, r2, LSL r12 @ Dá o shift se a subtração resultou num valor positivo
 
 	@ Loop que realiza a divisao desejada
 	B div_condition
